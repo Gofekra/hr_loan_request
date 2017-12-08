@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_loan_request_type,access_hr_loan_request_type,model_hr_loan_request_type,group_hr_payroll_loan,1,1,1,1
+access_hr_loan_request,access_hr_loan_request,model_hr_loan_request,group_hr_payroll_loan,1,1,1,1
+access_hr_loan_request_type_rate,access_hr_loan_request_type_rate,model_hr_loan_request_type_rate,group_hr_payroll_loan,1,1,1,1
+access_hr_loan_request_type_user,access_hr_loan_request_type,model_hr_loan_request_type,base.group_user,1,0,0,0
+access_hr_loan_request_type_rate_user,access_hr_loan_request_type_rate,model_hr_loan_request_type_rate,base.group_user,1,0,0,0
+access_hr_loan_request_user,access_hr_loan_request,model_hr_loan_request,base.group_user,1,1,1,0

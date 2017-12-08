@@ -1,0 +1,58 @@
+#-*- coding:utf-8 -*-
+
+import time
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
+from dateutil import relativedelta
+
+from openerp import netsvc
+from openerp.osv import fields, osv
+from openerp import tools
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+
+from openerp.tools.safe_eval import safe_eval as eval
+
+
+
+class hr_loan_request(osv.osv):
+
+    _name = "hr.loan.request"
+    _description = "Human Ressources Pret"
+
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'hr.loan.request') or '/'
+        return super(hr_loan_request, self).create(cr, uid, vals, context=context)
+            
+    _columns = {
+        'name':fields.char('Numero', size=64),
+        'employee_id':fields.many2one('hr.employee','Employe',readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'amount_asked':fields.float('Montant demandé'),
+        'amount_validate':fields.float('Montant validé'),
+        'date_start':fields.date('Date Debut',readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'date_end':fields.date('Date fin',readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'rate':fields.float('Taux Intérêt'),
+        'mensuality':fields.float('Mensualité'),
+        'request_type':fields.many2one('hr.loan.request.type','Type de pret',readonly=True, states={'draft': [('readonly', False)]}),
+        'state':fields.selection(
+            (('draft', 'Brouillon'),('open', 'Ouverte'),('valid','Valider'),('done', 'Terminer'),('decline','Refuser'),('cancel', 'Annuler')),
+            'Etat',readonly=True),
+        }
+    _defaults = {
+        'date_start': fields.date.context_today,
+        'state': 'draft',
+        'name': lambda obj, cr, uid, context: '/',
+    }
+hr_loan_request()
+
+class hr_loan_request_type(osv.osv):
+
+	_name = "hr.loan.request.type"
+	_description = "les differents type de pret possible"
+	_columns = {
+		'name':fields.char('Type de prêt', size=64),
+		'code':fields.char('Code', size=64),
+        }
+hr_loan_request_type()

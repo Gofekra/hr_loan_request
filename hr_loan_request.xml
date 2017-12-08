@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <menuitem id="id_hr_loan_config" parent="hr.menu_hr_configuration"
+            name="Prêts"/>
+
+        <record id="hr_loan_type_rate_act" model="ir.actions.act_window">
+            <field name="name">Taux des Types de prêts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.loan.request.type.rate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="hr_loan_request_type_rate_tree_view" model="ir.ui.view">
+            <field name="name">hr.loan.request.type.rate.tree.view</field>
+            <field name="model">hr.loan.request.type.rate</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Taux Type Emprunt" editable="top"> 
+                    <field name="name"/> 
+                    <field name="amount_min"/>
+                    <field name="amount_max"/>
+                    <field name="rate"/> 
+                </tree>
+            </field>
+        </record>
+        
+        <menuitem id="id_hr_loan_type_rate" parent="id_hr_loan_config"
+            name="Taux des Types de prêts" action="hr_loan_type_rate_act"/>
+
+        <!-- fin ajout -->
+
+        <record id="hr_loan_type_act" model="ir.actions.act_window">
+            <field name="name">Type de prêts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.loan.request.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>  
+
+        <record id="hr_loan_request_type_tree_view" model="ir.ui.view">
+            <field name="name">hr.loan.request.type.tree.view</field>
+            <field name="model">hr.loan.request.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Type Emprunt"> 
+                    <field name="code"/> 
+                    <field name="name"/> 
+                    <field name="rubriques_id"/> 
+                </tree>
+            </field>
+        </record>
+        
+        <!-- ajout -->
+
+        <record id="hr_loan_request_type_tree_view" model="ir.ui.view">
+            <field name="name">hr.loan.request.type.tree.view</field>
+            <field name="model">hr.loan.request.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Type Emprunt"> 
+                    <sheet>
+                        <group>    
+                            <group cols="4">
+                                <field name="code"/> 
+                                <field name="name"/>
+                                <field name="rubriques_id"/>
+                            </group>
+                            <group cols="4">
+                                <field name="duree_max"/>
+                                <field name="amount_max"/>
+                                <field name="cession_max"/>
+                                <field name="age_max"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="rate"/> 
+                            <field name="limited_on_current_year"/> 
+                            <field name="formule"/>
+                            <field name="formule_plafond"/>
+                            <field name="rub_code"/>
+                            <field name="constante"/>
+                        </group>
+                        <separator string="Taux" colspan="4" />
+                        <field name="rate_ids">
+                            <tree editable ="top">
+                                <field name="name"/>
+                                <field name="rate"/>
+                                <field name="amount_min"/>
+                                <field name="amount_max"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- fin ajout -->
+
+        <menuitem id="hr_loan_type" parent="id_hr_loan_config"
+            name="Types de prêts" action="hr_loan_type_act"/>
+                       
+                    
+        <menuitem
+            id="menu_hr_loan_request_root"
+            name="Gestion des prêts"
+            parent="hr.menu_hr_root"/>
+        
+        <record id="hr_loan_request_act" model="ir.actions.act_window">
+            <field name="name">Gestion des prêts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.loan.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="menu_hr_loan_request"
+            name="Demandes"
+            action="hr_loan_request_act"
+            parent="menu_hr_loan_request_root"/>
+            
+        <record id="hr_loan_valid_act" model="ir.actions.act_window">
+            <field name="name">Gestion des prêts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.loan.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>            
+                
+        <menuitem
+            id="menu_hr_loan_request_valid"
+            name="Validation"
+            action="hr_loan_valid_act"
+            parent="menu_hr_loan_request_root"/>
+
+        <!-- ajout -->
+        
+        <!-- fin ajout -->
+
+        <record id="hr_loan_request_valid" model="ir.ui.view">
+            <field name="name">hr.loan.request.form</field>
+            <field name="model">hr.loan.request</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Emprunt" version="7.0"> 
+                    <header> 
+                        <button name="open" type="object" states="draft" string="Confirmer la demande" groups="base.group_user" class="oe_highlight"/> 
+                        <button name="validate" type="object" states="open" string="Valider" groups="base.group_user" class="oe_highlight"/> 
+                        <button name="cancel" states="draft,open" string="Annuler" groups="base.group_user"/> 
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,valid1,valid2,valid3,done,decline,cancel"/> 
+                    </header> 
+                    <sheet> 
+                        <h1> 
+                            <field name="name" class="oe_inline" readonly="1"/> 
+                        </h1> 
+                        <group> 
+                            <group> 
+                                <field name="employee_id" />
+                                <field name="request_type" on_change="onchange_type(request_type,employee_id)" groups="base.group_user"/> 
+                            </group> 
+                            <group> 
+                                <field name="date"/>
+                                <field name="amount_max"/>
+                                <field name="repayment_max"/>
+                            </group> 
+                        </group> 
+                        <notebook> 
+                            <page string="Demande"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <group> 
+                                            <field name="motif"  groups="base.group_user"/> 
+                                            <field name="amount_request" on_change="onchange_amount(amount_request,amount_max,term_request)" groups="base.group_user"/> 
+                                            <field name="term_request" groups="base.group_user"/> 
+                                            <field name="rate" readonly="1" groups="base.group_user"/> 
+                                            <field name="repayment_request" readonly="1" groups="base.group_user"/>
+                                        </group> 
+                                    </group> 
+                                </form> 
+                            </page> 
+                            <page string="Validation" states="open,done,valid1,valid2,valid3"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <field name="amount_approve" groups="base.group_user"/> 
+                                        <field name="term_approve" groups="base.group_user"/> 
+                                        <field name="date_start" groups="base.group_user"/> 
+                                        <field name="date_end" groups="base.group_user"/> 
+                                        <field name="repayment_approve" readonly="1" groups="base.group_user"/> 
+                                    </group> 
+                                </form> 
+                                <div class="oe_clear"/> 
+                                <field name="note" class="oe_inline" placeholder="Remarques..."/> 
+                            </page> 
+                            <page string="Ressources Humaines"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <group> 
+                                            <field name="rubrique_id" groups="base.group_user" readonly="1"/> 
+                                            <field name="rubriques_id" groups="base.group_user" readonly="1"/>
+                                        </group> 
+                                    </group> 
+                                </form> 
+                            </page> 
+                        </notebook> 
+                    </sheet> 
+                    <div class="oe_chatter"> 
+                        <!--
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/> 
+                        <field name="message_ids" widget="mail_thread"/>
+                        -->
+                    </div>
+                </form>
+            </field>    
+        </record>            
+        
+        <record id="hr_loan_request" model="ir.ui.view">
+            <field name="name">hr.loan.request.form</field>
+            <field name="model">hr.loan.request</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Emprunt" version="7.0"> 
+                    <header> 
+                        <button name="open" type="object" states="draft" string="Confirmer la demande" groups="base.group_user" class="oe_highlight"/> 
+                        <button name="validate_dap" type="object" states="open" string="Valider" groups="base.group_user" class="oe_highlight"/>
+                        <button name="done" type="object" states="valid1,valid2,valid3" string="Terminer" groups="base.group_user" class="oe_highlight"/>
+                        <button name="decline" type="object" states="valid1,valid2,valid3" string="Refuser" groups="base.group_user" class="oe_highlight"/>
+                        <button name="cancel" states="draft,open" string="Annuler" groups="base.group_user"/> 
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,valid1,valid2,valid3,done,decline,cancel"/> 
+                    </header> 
+                    <sheet> 
+                        <h1> 
+                            <field name="name" class="oe_inline" readonly="1"/> 
+                        </h1> 
+                        <group> 
+                            <group> 
+                                <field name="employee_id"/>
+                                <field name="request_type" on_change="onchange_type(request_type,employee_id)" groups="base.group_user"/> 
+                            </group> 
+                            <group> 
+                                <field name="date"/>
+                                <field name="term_max"/>
+                                <field name="amount_max"/>
+                                <!-- <field name="amount_max_test"/> -->
+                                <field name="repayment_max"/>
+                            </group> 
+                        </group> 
+                        <notebook> 
+                            <page string="Demande"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <group> 
+                                            <field name="motif"  groups="base.group_user"/> 
+                                            <field name="amount_request" on_change="onchange_amount(amount_request,amount_max,term_request)" groups="base.group_user"/> 
+                                            <field name="term_request" on_change="onchange_term_request(term_request,term_max)" groups="base.group_user"/> 
+                                            <field name="rate" readonly="1" groups="base.group_user"/> 
+                                            <field name="repayment_request" readonly="1" groups="base.group_user"/>
+                                        </group> 
+                                    </group> 
+                                </form> 
+                            </page> 
+                            <page string="Validation" states="open,done,valid1,valid2,valid3"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <field name="amount_approve" groups="base.group_user"/> 
+                                        <field name="term_approve" groups="base.group_user"/> 
+                                        <field name="date_start" groups="base.group_user"/> 
+                                        <field name="date_end" groups="base.group_user"/> 
+                                        <field name="repayment_approve" readonly="1" groups="base.group_user"/> 
+                                    </group> 
+                                </form> 
+                                <div class="oe_clear"/> 
+                                <field name="note" class="oe_inline" placeholder="Remarques..."/> 
+                            </page> 
+                            <page string="Ressources Humaines"> 
+                                <form string="Prets" version="7.0"> 
+                                    <group> 
+                                        <group> 
+                                            <field name="rubrique_id" groups="base.group_user" readonly="1"/>
+                                            <field name="rubriques_id" groups="base.group_user" readonly="1"/>
+                                        </group> 
+                                    </group> 
+                                </form> 
+                            </page> 
+                        </notebook> 
+                    </sheet> 
+                    <div class="oe_chatter"> 
+                        <!--
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/> 
+                        <field name="message_ids" widget="mail_thread"/>
+                        -->
+                    </div>
+                </form>
+            </field>    
+        </record>
+        
+        <record id="hr_loan_request_tree" model="ir.ui.view">
+            <field name="name">hr.loan.request.tree</field>
+            <field name="model">hr.loan.request</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Emprunt"> 
+                    <field name="date"/> 
+                    <field name="name"/> 
+                    <field name="employee_id"/> 
+                    <field name="request_type"/> 
+                    <field name="amount_request"/> 
+                    <field name="state"/> 
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_loan_request_search" model="ir.ui.view">
+            <field name="name">hr.loan.request.search</field>
+            <field name="model">hr.loan.request</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search> 
+                    <field name="date"/> 
+                    <field name="name"/> 
+                    <field name="employee_id"/> 
+                    <field name="request_type"/> 
+                    <field name="amount_request"/> 
+                    <field name="state"/>
+                    <group string="Group By…">
+                        <filter string="Employe" name="group_employee" icon="terp-personal" domain="[]" 
+                            context="{'group_by':'employee_id'}"/>
+                        <filter string="Type" name="group_type" icon="terp-personal" domain="[]" 
+                            context="{'group_by':'request_type'}"/>
+                    </group> 
+                </search>
+            </field>
+        </record>        
+        
+        <record model="ir.ui.view" id="hr_loan_request_kanban">
+            <field name="name">hr.loan.request.kanban</field>
+            <field name="model">hr.loan.request</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state" groups="base.group_no_one"/> 
+                <field name="employee_id"/> 
+                <field name="amount_request" sum="Total demandes"/> 
+                <field name="date"/> 
+                <templates> 
+                    <field name="date"/> 
+                    <t t-name="kanban-box"> 
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click"> 
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban"> 
+                                <span class="oe_e">í</span> 
+                                <ul class="oe_dropdown_menu"> 
+                                    <t t-if="widget.view.is_action_enabled('edit')">
+                                        <li>
+                                            <a type="edit">Edit...</a>
+                                        </li>
+                                    </t> 
+                                    <t t-if="widget.view.is_action_enabled('delete')">
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                    </t> 
+                                </ul> 
+                            </div> 
+                            <div class="oe_kanban_content"> 
+                                <div> 
+                                    <field name="name"/> 
+                                    <span t-attf-class="#{red || ''}">
+                                        <field name="date"/>
+                                    </span> 
+                                </div> 
+                                <div> 
+                                    <field name="employee_id"/> 
+                                </div> 
+                                <div> 
+                                    <t t-set="red">oe_kanban_text_red</t> 
+                                    <span t-attf-class="#{red || ''}">AR
+                                        <field name="amount_request"/>
+                                    </span> 
+                                </div> 
+                                <div class="oe_kanban_bottom_right"> 
+                                    <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.employee_id.value"/> 
+                                </div> 
+                            </div> 
+                            <div class="oe_clear"/> 
+                        </div> 
+                    </t> 
+                </templates> 
+            </kanban>
+            </field>
+        </record>
+        
+        
+    </data>
+</openerp>
